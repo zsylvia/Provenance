@@ -31,6 +31,7 @@ import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.VoidType;
 
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -470,7 +471,43 @@ public class Provenance {
 	}
 
 	public static void main(String[] args) {
-		new Provenance().runInjection("/Users/zacharysylvia/Documents/workspace/ianalyst-desktop");
+		ArrayList<String> arguments = new ArrayList<String>(Arrays.asList(args));
+		String projectDir = "";
+		boolean validParameters = true;
+		if(arguments.size() < 1 || arguments.contains("?") || arguments.contains("-u")) {
+			validParameters = false;
+		} else {
+			projectDir = arguments.get(0);
+			File file = new File(projectDir);
+			if (!file.isDirectory())
+			   file = file.getParentFile();
+			if (!file.exists()){
+			    validParameters = false;
+			}
+		}
+		
+		if(validParameters) {
+			new Provenance().runInjection(projectDir);
+		} else {
+			Console console = System.console();
+			console.printf("\n\n");
+			console.printf("===============================================================================================================");
+			console.printf("\n\n");
+			console.printf("Provenance Usage: ");
+			console.printf("\n");
+			console.printf("java -jar Provenance-<version>-jar-with-dependencies.jar <project_directory>");
+			console.printf("\n\n");
+			console.printf("---------------------------------------------------------------------------------------------------------------");
+			console.printf("\n\n");
+			console.printf("Example:");
+			console.printf("\n");
+			console.printf("java -jar Provenance-1.0.0-jar-with-dependencies.jar /Users/user/workspace/project");
+			console.printf("\n\n");
+			console.printf("===============================================================================================================");
+			console.printf("\n\n");
+		}
+		
+//		new Provenance().runInjection("/Users/zacharysylvia/Documents/workspace/ianalyst-desktop");
 	}
 
 }
